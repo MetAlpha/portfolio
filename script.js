@@ -1,3 +1,35 @@
+const starsBg = document.getElementById("stars-bg");
+
+if (starsBg) {
+    for (let i = 0; i < 110; i++) {
+        const star = document.createElement("div");
+        star.className = "bg-star";
+
+        const size = Math.random() * 2.2 + 1;
+        const duration = Math.random() * 70 + 45;
+        const delay = -(Math.random() * duration);
+
+        star.style.width = size + "px";
+        star.style.height = size + "px";
+        star.style.top = "105%";
+        star.style.left = Math.random() * 100 + "%";
+        star.style.opacity = (Math.random() * 0.7 + 0.2).toFixed(2);
+        star.style.animationDuration = duration + "s";
+        star.style.animationDelay = delay + "s";
+
+        starsBg.appendChild(star);
+    }
+}
+
+const menuBtn = document.getElementById("menu-btn");
+const navLinks = document.getElementById("nav-links");
+
+if (menuBtn && navLinks) {
+    menuBtn.addEventListener("click", function () {
+        navLinks.classList.toggle("show");
+    });
+}
+
 const projectsData = {
     "laravel-sae": {
         type: "BUT 2 Case Study - University Team Project",
@@ -38,130 +70,122 @@ const projectsData = {
         date: "November 2026",
         image: "images/projet-portfolio.png",
         context: "Developed for the Professional English course (R3.12) at IUT Annecy to present my resume, skills, and IT projects online to recruiters without using any CMS or backend framework.",
-        role: "I designed the layout, wrote all the content in professional English, and coded the responsive structure, project filters, and detail pop-up modals.",
+        role: "I designed the night-sky Leo constellation layout, wrote all the content in professional English, and coded the multi-page structure, project filters, animated starfield, and detail modals.",
         org: "Individual project deployed on the IUT OVH server.",
         tech: ["HTML5", "CSS3", "JavaScript"],
         link: ""
     }
 };
 
-const menuBtn = document.getElementById("menu-btn");
-const navLinks = document.getElementById("nav-links");
-
-menuBtn.addEventListener("click", function () {
-    navLinks.classList.toggle("show");
-});
-
-const navAnchors = navLinks.querySelectorAll("a");
-for (let i = 0; i < navAnchors.length; i++) {
-    navAnchors[i].addEventListener("click", function () {
-        navLinks.classList.remove("show");
-    });
-}
-
 const filterBtns = document.querySelectorAll(".filter-btn");
-const projectCards = document.querySelectorAll(".project-card");
+const constellationNodes = document.querySelectorAll(".constellation-node");
 
-for (let i = 0; i < filterBtns.length; i++) {
-    filterBtns[i].addEventListener("click", function () {
-        for (let j = 0; j < filterBtns.length; j++) {
-            filterBtns[j].classList.remove("active");
-        }
-        this.classList.add("active");
-
-        const selectedFilter = this.getAttribute("data-filter");
-
-        for (let k = 0; k < projectCards.length; k++) {
-            const cardTech = projectCards[k].getAttribute("data-tech");
-            if (selectedFilter === "all" || cardTech.indexOf(selectedFilter) !== -1) {
-                projectCards[k].style.display = "flex";
-            } else {
-                projectCards[k].style.display = "none";
+if (filterBtns.length > 0 && constellationNodes.length > 0) {
+    for (let i = 0; i < filterBtns.length; i++) {
+        filterBtns[i].addEventListener("click", function () {
+            for (let j = 0; j < filterBtns.length; j++) {
+                filterBtns[j].classList.remove("active");
             }
-        }
-    });
+            this.classList.add("active");
+
+            const selectedFilter = this.getAttribute("data-filter");
+
+            for (let k = 0; k < constellationNodes.length; k++) {
+                const nodeTech = constellationNodes[k].getAttribute("data-tech");
+                if (selectedFilter === "all" || nodeTech.indexOf(selectedFilter) !== -1) {
+                    constellationNodes[k].style.display = "flex";
+                } else {
+                    constellationNodes[k].style.display = "none";
+                }
+            }
+        });
+    }
 }
 
 const modal = document.getElementById("project-modal");
 const closeModalBtn = document.getElementById("close-modal");
 const openModalBtns = document.querySelectorAll(".open-modal-btn");
 
-const modalType = document.getElementById("modal-type");
-const modalTitle = document.getElementById("modal-title");
-const modalDate = document.getElementById("modal-date");
-const modalImg = document.getElementById("modal-img");
-const modalContext = document.getElementById("modal-context");
-const modalRole = document.getElementById("modal-role");
-const modalOrg = document.getElementById("modal-org");
-const modalTech = document.getElementById("modal-tech");
-const modalLinkWrap = document.getElementById("modal-link-wrap");
-const modalLink = document.getElementById("modal-link");
+if (modal && openModalBtns.length > 0) {
+    const modalType = document.getElementById("modal-type");
+    const modalTitle = document.getElementById("modal-title");
+    const modalDate = document.getElementById("modal-date");
+    const modalImg = document.getElementById("modal-img");
+    const modalContext = document.getElementById("modal-context");
+    const modalRole = document.getElementById("modal-role");
+    const modalOrg = document.getElementById("modal-org");
+    const modalTech = document.getElementById("modal-tech");
+    const modalLinkWrap = document.getElementById("modal-link-wrap");
+    const modalLink = document.getElementById("modal-link");
 
-for (let i = 0; i < openModalBtns.length; i++) {
-    openModalBtns[i].addEventListener("click", function () {
-        const projectId = this.getAttribute("data-project");
-        const data = projectsData[projectId];
+    for (let i = 0; i < openModalBtns.length; i++) {
+        openModalBtns[i].addEventListener("click", function () {
+            const projectId = this.getAttribute("data-project");
+            const data = projectsData[projectId];
 
-        if (!data) {
-            return;
+            if (!data) {
+                return;
+            }
+
+            modalType.textContent = data.type;
+            modalTitle.textContent = data.title;
+            modalDate.textContent = data.date;
+            modalImg.src = data.image;
+            modalImg.alt = data.title;
+            modalContext.textContent = data.context;
+            modalRole.textContent = data.role;
+            modalOrg.textContent = data.org;
+
+            modalTech.innerHTML = "";
+            for (let j = 0; j < data.tech.length; j++) {
+                const tag = document.createElement("span");
+                tag.textContent = data.tech[j];
+                modalTech.appendChild(tag);
+            }
+
+            if (data.link && data.link !== "") {
+                modalLink.href = data.link;
+                modalLinkWrap.style.display = "block";
+            } else {
+                modalLinkWrap.style.display = "none";
+            }
+
+            modal.classList.add("open");
+        });
+    }
+
+    closeModalBtn.addEventListener("click", function () {
+        modal.classList.remove("open");
+    });
+
+    window.addEventListener("click", function (event) {
+        if (event.target === modal) {
+            modal.classList.remove("open");
         }
-
-        modalType.textContent = data.type;
-        modalTitle.textContent = data.title;
-        modalDate.textContent = data.date;
-        modalImg.src = data.image;
-        modalImg.alt = data.title;
-        modalContext.textContent = data.context;
-        modalRole.textContent = data.role;
-        modalOrg.textContent = data.org;
-
-        modalTech.innerHTML = "";
-        for (let j = 0; j < data.tech.length; j++) {
-            const tag = document.createElement("span");
-            tag.textContent = data.tech[j];
-            modalTech.appendChild(tag);
-        }
-
-        if (data.link && data.link !== "") {
-            modalLink.href = data.link;
-            modalLinkWrap.style.display = "block";
-        } else {
-            modalLinkWrap.style.display = "none";
-        }
-
-        modal.classList.add("open");
     });
 }
-
-closeModalBtn.addEventListener("click", function () {
-    modal.classList.remove("open");
-});
-
-window.addEventListener("click", function (event) {
-    if (event.target === modal) {
-        modal.classList.remove("open");
-    }
-});
 
 const contactForm = document.getElementById("contact-form");
 const formStatus = document.getElementById("form-status");
 
-contactForm.addEventListener("submit", function (event) {
-    event.preventDefault();
+if (contactForm && formStatus) {
+    contactForm.addEventListener("submit", function (event) {
+        event.preventDefault();
 
-    const name = document.getElementById("name").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const message = document.getElementById("message").value.trim();
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const message = document.getElementById("message").value.trim();
 
-    if (name === "" || email === "" || message === "") {
-        formStatus.textContent = "Please fill in all fields.";
-        return;
-    }
+        if (name === "" || email === "" || message === "") {
+            formStatus.textContent = "Please fill in all fields.";
+            return;
+        }
 
-    const subject = encodeURIComponent("Portfolio Contact from " + name);
-    const body = encodeURIComponent("Name: " + name + "\nEmail: " + email + "\n\n" + message);
-    window.location.href = "mailto:adrien.metral-boffod@etu.univ-smb.fr?subject=" + subject + "&body=" + body;
+        const subject = encodeURIComponent("Portfolio Contact from " + name);
+        const body = encodeURIComponent("Name: " + name + "\nEmail: " + email + "\n\n" + message);
+        window.location.href = "mailto:adrien.metral-boffod@etu.univ-smb.fr?subject=" + subject + "&body=" + body;
 
-    formStatus.textContent = "Your email client has been opened to send your message.";
-    contactForm.reset();
-});
+        formStatus.textContent = "Your email client has been opened to send your message.";
+        contactForm.reset();
+    });
+}
